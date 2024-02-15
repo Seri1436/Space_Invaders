@@ -1,4 +1,3 @@
-from typing import Any
 import pygame
 
 class Laser(pygame.sprite.Sprite):
