@@ -6,7 +6,7 @@ class Spaceship(pygame.sprite.Sprite):
         super().__init__()
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.image = pygame.image.load("/Users/serilee/Documents/Python_Work_Space/SpaceInvader/spaceship.png")
+        self.image = pygame.image.load("/Users/serilee/Documents/Python_Work_Space/Space_Invaders/spaceship.png")
         self.rect = self.image.get_rect(midbottom = (self.screen_width/2, self.screen_height))
         self.speed = 6
         self.lasers_group = pygame.sprite.Group()
