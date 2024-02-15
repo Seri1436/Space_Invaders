@@ -1,6 +1,8 @@
 import pygame, sys
-from spaceship import Spaceship
-from obstacle import Obstacle
+from game import Game
+from game import grid
+#from spaceship import Spaceship
+#from obstacle import Obstacle
 #from laser import Laser
 
 pygame.init()
