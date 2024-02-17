@@ -8,11 +8,11 @@ To get started with this project, you'll need to clone the repository and set up
 
 ### Cloning the Repository
 
-    git clone https://github.com/Seri1436/Space_Invaders.git
+    git clone https://github.com/Seri1436/game_Space_Invaders.git
 
 ### Setting up a Virtual Environment and Activate the virtual environmen
 
-    cd ./Space_Invaders
+    cd ./game_Space_Invaders
 
     pyenv versions
 
