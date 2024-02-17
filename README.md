@@ -38,4 +38,4 @@ To get started with this project, you'll need to clone the repository and set up
 
 ## Reference
 
-[![Python Space Invaders Game Tutorial with Pygame - Beginner Tutorial (OOP)]](https://www.youtube.com/watch?v=PFMoo_dvhyw)
+[Python Space Invaders Game Tutorial with Pygame - Beginner Tutorial (OOP)](https://www.youtube.com/watch?v=PFMoo_dvhyw)
