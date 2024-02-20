@@ -1,6 +1,8 @@
-import pygame, sys
-from spaceship import Spaceship
-from obstacle import Obstacle
+import pygame
+import sys
+from game import Game
+#from spaceship import Spaceship
+#from obstacle import Obstacle
 #from laser import Laser
 
 pygame.init()
@@ -15,11 +17,16 @@ pygame.display.set_caption("Python Space Invaders")
 
 clock = pygame.time.Clock()
 
-spaceship = Spaceship(SCREEN_WIDTH, SCREEN_HEIGHT)
-spaceship_group = pygame.sprite.GroupSingle()
-spaceship_group.add(spaceship)
+game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-obstacle = Obstacle()
+SHOOT_LASER = pygame.USEREVENT
+pygame.time.set_timer(SHOOT_LASER, 300)
+
+#spaceship = Spaceship(SCREEN_WIDTH, SCREEN_HEIGHT)
+#spaceship_group = pygame.sprite.GroupSingle()
+#spaceship_group.add(spaceship)
+
+#obstacle = Obstacle()
 
 #laser = Laser((100,100), 6, SCREEN_HEIGHT)
 #laser2 = Laser((100,200), -6, SCREEN_HEIGHT)
@@ -32,16 +39,25 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == SHOOT_LASER:
+            game.alien_shoot_laser()
 
     #Updating
-    spaceship_group.update()
+    game.spaceship_group.update()
+    game.move_aliens()
+    #game.alien_shoot_laser()
+    game.alien_lasers_group.update()
     #lasers_group.update()
 
     #Drawing
     screen.fill(GREY)
-    spaceship_group.draw(screen)
-    spaceship_group.sprite.lasers_group.draw(screen)
-    obstacle.blocks_group.draw(screen)
+    game.spaceship_group.draw(screen)
+    game.spaceship_group.sprite.lasers_group.draw(screen)
+    for obstacles in game.obstacles:
+        obstacles.blocks_group.draw(screen)
+    game.aliens_group.draw(screen)
+    game.alien_lasers_group.draw(screen)
+    #obstacle.blocks_group.draw(screen)
     #lasers_group.draw(screen)
 
     pygame.display.update()
