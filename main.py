@@ -1,5 +1,4 @@
-import pygame
-import sys
+import pygame, sys, random
 from game import Game
 #from spaceship import Spaceship
 #from obstacle import Obstacle
@@ -22,6 +21,9 @@ game = Game(SCREEN_WIDTH, SCREEN_HEIGHT)
 SHOOT_LASER = pygame.USEREVENT
 pygame.time.set_timer(SHOOT_LASER, 300)
 
+MYSTERYSHIP = pygame.USEREVENT + 1
+pygame.time.set_timer(MYSTERYSHIP, random.randint(4000,8000))
+
 #spaceship = Spaceship(SCREEN_WIDTH, SCREEN_HEIGHT)
 #spaceship_group = pygame.sprite.GroupSingle()
 #spaceship_group.add(spaceship)
@@ -39,15 +41,26 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == SHOOT_LASER:
+        if event.type == SHOOT_LASER and game.run:
             game.alien_shoot_laser()
 
+        if event.type == MYSTERYSHIP and game.run:
+            game.create_mystery_ship()
+            pygame.time.set_timer(MYSTERYSHIP, random.randint(4000,8000))
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE] and game.run == False:
+            game.reset()
+
     #Updating
-    game.spaceship_group.update()
-    game.move_aliens()
-    #game.alien_shoot_laser()
-    game.alien_lasers_group.update()
-    #lasers_group.update()
+    if game.run:
+        game.spaceship_group.update()
+        game.move_aliens()
+        game.alien_lasers_group.update()
+        game.mystery_ship_group.update()
+        game.check_for_collisions()
+        #alien_shoot_laser()
+        #lasers_group.update()
 
     #Drawing
     screen.fill(GREY)
@@ -57,6 +70,7 @@ while True:
         obstacles.blocks_group.draw(screen)
     game.aliens_group.draw(screen)
     game.alien_lasers_group.draw(screen)
+    game.mystery_ship_group.draw(screen)
     #obstacle.blocks_group.draw(screen)
     #lasers_group.draw(screen)
 

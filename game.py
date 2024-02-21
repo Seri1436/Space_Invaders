@@ -4,6 +4,7 @@ from obstacle import Obstacle
 from obstacle import grid
 from alien import Alien
 from laser import Laser
+from alien import MysteryShip
 
 class Game:
     def __init__(self, screen_width, screen_height):
@@ -16,6 +17,9 @@ class Game:
         self.create_aliens()
         self.aliens_direction = 1
         self.alien_lasers_group = pygame.sprite.Group()
+        self.mystery_ship_group = pygame.sprite.GroupSingle()
+        self.lives = 3
+        self.run = True
 
     def create_obstacles(self):
         obstacle_width = len(grid[0]) * 3
@@ -65,3 +69,52 @@ class Game:
             random_alien = random.choice(self.aliens_group.sprites())
             laser_sprite = Laser(random_alien.rect.center, -6, self.screen_height)
             self.alien_lasers_group.add(laser_sprite)
+
+    def create_mystery_ship(self):
+        self.mystery_ship_group.add(MysteryShip(self.screen_width))
+
+    def check_for_collisions(self):
+        #Spaceship
+        if self.spaceship_group.sprite.lasers_group:
+            for laser_sprite in self.spaceship_group.sprite.lasers_group:
+                if pygame.sprite.spritecollide(laser_sprite, self.aliens_group, True):
+                    laser_sprite.kill()
+                if pygame.sprite.spritecollide(laser_sprite, self.mystery_ship_group, True):
+                    laser_sprite.kill()
+
+                for obstacle in self.obstacles:
+                    if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
+                        laser_sprite.kill()
+        #Alien Lasers
+        if self.alien_lasers_group:
+            for laser_sprite in self.alien_lasers_group:
+                if pygame.sprite.spritecollide(laser_sprite, self.spaceship_group, False):
+                    laser_sprite.kill()
+                    self.lives -= 1
+                    if self.lives == 0:
+                        self.game_over()
+                
+                for obstacle in self.obstacles:
+                    if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
+                        laser_sprite.kill()
+
+        if self.aliens_group:
+            for alien in self.aliens_group:
+                for obstacle in self.obstacles:
+                    pygame.sprite.spritecollide(alien, obstacle.blocks_group, True)
+
+                if pygame.sprite.spritecollide(alien, self.spaceship_group, False):
+                    self.game_over()
+
+    def game_over(self):
+        self.run = False
+
+    def reset(self):
+        self.run = True
+        self.lives = 3
+        self.spaceship_group.sprite.reset()
+        self.aliens_group.empty()
+        self.alien_lasers_group.empty()
+        self.create_aliens()
+        self.mystery_ship_group.empty()
+        self.obstacles = self.create_obstacles()
