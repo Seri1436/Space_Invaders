@@ -7,11 +7,12 @@ from laser import Laser
 from alien import MysteryShip
 
 class Game:
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height, offset):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.offset = offset
         self.spaceship_group = pygame.sprite.GroupSingle()
-        self.spaceship_group.add(Spaceship(self.screen_width, self.screen_height))
+        self.spaceship_group.add(Spaceship(self.screen_width, self.screen_height, self.offset))
         self.obstacles = self.create_obstacles()
         self.aliens_group = pygame.sprite.Group()
         self.create_aliens()
@@ -23,7 +24,7 @@ class Game:
 
     def create_obstacles(self):
         obstacle_width = len(grid[0]) * 3
-        gap = (self.screen_width - (4 * obstacle_width))/5
+        gap = (self.screen_width + self.offset - (4 * obstacle_width))/5
         obstacles = []
         for i in range(4):
             offset_x = (i + 1) * gap + i * obstacle_width
@@ -44,7 +45,7 @@ class Game:
                 else:
                     alien_type = 1
 
-                alien = Alien(alien_type, x, y)
+                alien = Alien(alien_type, x + self.offset/2, y)
                 self.aliens_group.add(alien)
 
     def move_aliens(self):
@@ -52,10 +53,10 @@ class Game:
         
         alien_sprites = self.aliens_group.sprites()
         for alien in alien_sprites:
-            if alien.rect.right >= self.screen_width:
+            if alien.rect.right >= self.screen_width + self.offset/2:
                 self.aliens_direction = -1
                 self.alien_move_down(2)
-            elif alien.rect.left <= 0:
+            elif alien.rect.left <= self.offset/2:
                 self.aliens_direction = 1
                 self.alien_move_down(2)
 
@@ -71,7 +72,7 @@ class Game:
             self.alien_lasers_group.add(laser_sprite)
 
     def create_mystery_ship(self):
-        self.mystery_ship_group.add(MysteryShip(self.screen_width))
+        self.mystery_ship_group.add(MysteryShip(self.screen_width, self.offset))
 
     def check_for_collisions(self):
         #Spaceship
